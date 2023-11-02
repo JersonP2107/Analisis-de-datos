@@ -1,18 +1,24 @@
 import numpy as np
 from datasets import load_dataset
+import pandas as pd
 
 # Cargar el conjunto de datos
 heart_failure = load_dataset("mstz/heart_failure")
 train_data = heart_failure["train"]
 
-# Extraer las edades de los pacientes
-ages = train_data['age']
+# Paso 1: Convertir el Dataset en un DataFrame
+df = pd.DataFrame(train_data)
 
-# Convertir las edades en un arreglo de numpy
-ages_np = np.array(ages)
+# Paso 2: Separar el DataFrame en dos DataFrames basados en el valor de "is_dead"
+df_perecidos = df[df["is_dead"] == 1]
+df_sobrevivientes = df[df["is_dead"] == 0]
 
-# Calcular el promedio de las edades
-average_age = np.mean(ages_np)
+# Paso 3: Calcular el promedio de edades para cada DataFrame
+promedio_edades_perecidos = df_perecidos["age"].mean()
+promedio_edades_sobrevivientes = df_sobrevivientes["age"].mean()
 
-# Imprimir el resultado usando un f-string
-print(f"El promedio de edad de los pacientes es: {average_age:.2f}")
+# Paso 4: Imprimir los promedios de edades
+print("Promedio de edades de personas que perecieron:", promedio_edades_perecidos)
+print(
+    "Promedio de edades de personas que sobrevivieron:", promedio_edades_sobrevivientes
+)
