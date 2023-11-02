@@ -22,3 +22,19 @@ print("Promedio de edades de personas que perecieron:", promedio_edades_perecido
 print(
     "Promedio de edades de personas que sobrevivieron:", promedio_edades_sobrevivientes
 )
+
+# Paso 5: Verificar tipos de datos en cada columna
+tipos_de_datos = df.dtypes
+print("Tipos de datos en el DataFrame:")
+print(tipos_de_datos)
+
+# Paso 6: Calcular la cantidad de hombres fumadores vs mujeres fumadoras
+cantidad_hombres_fumadores = df[
+    (df["gender"] == "Male") & (df["smoking"] == "Yes")
+].shape[0]
+cantidad_mujeres_fumadoras = df[
+    (df["gender"] == "Female") & (df["smoking"] == "Yes")
+].shape[0]
+
+print("Cantidad de hombres fumadores:", cantidad_hombres_fumadores)
+print("Cantidad de mujeres fumadoras:", cantidad_mujeres_fumadoras)
