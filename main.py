@@ -1,5 +1,5 @@
 import numpy as np
-from datasets import load_dataset
+from datasets import load_dataset, df
 import pandas as pd
 
 # Cargar el conjunto de datos
@@ -7,7 +7,8 @@ heart_failure = load_dataset("mstz/heart_failure")
 train_data = heart_failure["train"]
 
 # Paso 1: Convertir el Dataset en un DataFrame
-df = pd.DataFrame(train_data)
+
+df = pd.read_csv(train_data)
 
 # Paso 2: Separar el DataFrame en dos DataFrames basados en el valor de "is_dead"
 df_perecidos = df[df["is_dead"] == 1]

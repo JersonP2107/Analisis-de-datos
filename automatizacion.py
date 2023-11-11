@@ -1,45 +1,43 @@
-import argparse
-import pandas as pd
 import requests
+import pandas as pd
+import argparse
 
 
-def descargar_datos_desde_url(url):
-    # Descargar los datos desde la URL
-    response = requests.get(url)
+def descargar_datos_csv(url, archivo_destino):
+    try:
+        # Realizar una solicitud GET para descargar los datos
+        response = requests.get(url)
+        response.raise_for_status()  # Verificar si la solicitud fue exitosa
 
-    if response.status_code == 200:
-        # Crear un DataFrame a partir de los datos descargados
-        df = pd.read_csv(url)
-        return df
-    else:
-        print(f"Error al descargar datos desde la URL: {response.status_code}")
-        return None
+        # Guardar la respuesta en un archivo CSV
+        with open(archivo_destino, "wb") as archivo:
+            archivo.write(response.content)
 
+        print(f"Los datos se han descargado y guardado en {archivo_destino}")
 
-def categorizar_datos(df):
-    return df
-
-
-def exportar_a_csv(df, nombre_archivo):
-    # Exportar el DataFrame a un archivo CSV
-    df.to_csv(nombre_archivo, index=False)
+        # Llamar a la función para limpiar y preparar los datos
+        df = pd.read_csv(archivo_destino)
+        limpiar_y_preparar_datos(df)
+    except Exception as e:
+        print(f"Ocurrió un error al descargar los datos: {str(e)}")
 
 
-if __name__ == "__main__":
-    # Configurar los argumentos de la línea de comandos
-    parser = argparse.ArgumentParser(description="Proyecto Integrador Script")
-    parser.add_argument("url", help="URL de los datos a descargar")
-    parser.add_argument("archivo_csv", help="Nombre del archivo CSV de salida")
+def main():
+    parser = argparse.ArgumentParser(
+        description="Descargar y procesar datos desde una URL"
+    )
+    parser.add_argument("url", type=str, help="URL de los datos a procesar")
+    parser.add_argument(
+        "--archivo_destino",
+        type=str,
+        default="heart_failure_dataset.csv",
+        help="Nombre del archivo de destino",
+    )
 
     args = parser.parse_args()
 
-    # Descargar datos desde la URL
-    df = descargar_datos_desde_url(args.url)
+    # Llamar a la función para descargar los datos desde la URL proporcionada
+    descargar_datos_csv(args.url, args.archivo_destino)
 
-    if df is not None:
-        # Categorizar los datos
-        df_categorizado = categorizar_datos(df)
-
-        # Exportar a CSV
-        exportar_a_csv(df_categorizado, args.archivo_csv)
-        print(f"Datos exportados a {args.archivo_csv}")
+    if __name__ == "__main__":
+        main()
